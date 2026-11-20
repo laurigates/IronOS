@@ -10,6 +10,7 @@
 #include "Translation.h"
 #include "cmsis_os.h"
 #include "configuration.h"
+#ifndef COLOUR_160x40
 #include <OLED.hpp>
 #include <stdint.h>
 #include <stdlib.h>
@@ -1045,3 +1046,4 @@ void OLED::drawHeatSymbol(uint8_t state) {
 }
 
 bool OLED::isInitDone() { return initDone; }
+#endif /* !COLOUR_160x40 */

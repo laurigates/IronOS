@@ -8,7 +8,8 @@ ALL_PINECIL_V2_MODELS=Pinecilv2
 ALL_MHP30_MODELS=MHP30
 ALL_SEQURE_MODELS=S60 S60P T55 S99 Si012ProMax
 ALL_HS01_MODELS=HS01
-ALL_MODELS=$(ALL_MINIWARE_MODELS) $(ALL_PINECIL_MODELS) $(ALL_MHP30_MODELS) $(ALL_PINECIL_V2_MODELS) $(ALL_SEQURE_MODELS) $(ALL_HS01_MODELS)
+ALL_ALIENTEK_MODELS=T90
+ALL_MODELS=$(ALL_MINIWARE_MODELS) $(ALL_PINECIL_MODELS) $(ALL_MHP30_MODELS) $(ALL_PINECIL_V2_MODELS) $(ALL_SEQURE_MODELS) $(ALL_HS01_MODELS) $(ALL_ALIENTEK_MODELS)
 
 ifneq ($(model),$(filter $(model),$(ALL_MODELS)))
 $(error Invalid model '$(model)', valid options are: $(ALL_MODELS))
@@ -167,6 +168,35 @@ DEVICE_DFU_ADDRESS=0x08004400
 endif
 DEVICE_DFU_VID_PID=0x1209:0xDB42
 endif # ALL_SEQURE_MODELS
+
+ifeq ($(model),$(filter $(model),$(ALL_ALIENTEK_MODELS)))
+$(info Building for Alientek T90 )
+
+DEVICE_BSP_DIR=./Core/BSP/Alientek-T90
+S_SRCS:=$(shell find $(DEVICE_BSP_DIR) -type f -name '*.S')
+LDSCRIPT=./Core/BSP/Alientek-T90/CMSIS/device/n32l40x_flash.ld
+DEV_GLOBAL_DEFS=-D N32L40X              \
+                -D USE_STDPERIPH_DRIVER \
+                -D SYSCLK_SRC=3         \
+                -D SYSCLK_FREQ=64000000 \
+                -D USE_RTOS_SYSTICK     \
+                -D GCC_ARMCM4           \
+                -D ARM_MATH_CM4         \
+                -finline-limit=9999999
+
+DEV_LDFLAGS=-Wl,--wrap=printf  -Wl,--no-wchar-size-warning
+DEV_AFLAGS=
+DEV_CFLAGS=-D VECT_TAB_OFFSET=$(bootldr_size)U
+DEV_CXXFLAGS=
+CPUFLAGS=-mcpu=cortex-m4      \
+         -mthumb              \
+         -mfloat-abi=soft
+
+flash_size=76k
+bootldr_size=0x5000
+DEVICE_DFU_ADDRESS=0x08005000
+DEVICE_DFU_VID_PID=0x1209:0xDB42
+endif # ALL_ALIENTEK_MODELS
 
 ifeq ($(model),$(filter $(model),$(ALL_MHP30_MODELS)))
 $(info Building for MHP30 )
@@ -419,7 +449,7 @@ COMPILER=gcc
 ifeq ($(model),$(filter $(model),$(ALL_MINIWARE_MODELS) $(ALL_MHP30_MODELS)))
 COMPILER_PREFIX=arm-none-eabi
 endif
-ifeq ($(model),$(filter $(model),$(ALL_SEQURE_MODELS) ))
+ifeq ($(model),$(filter $(model),$(ALL_SEQURE_MODELS) $(ALL_ALIENTEK_MODELS) ))
 COMPILER_PREFIX=arm-none-eabi
 endif
 ifeq ($(model),$(filter $(model),$(ALL_PINECIL_MODELS) $(ALL_PINECIL_V2_MODELS) $(ALL_HS01_MODELS)))
@@ -523,8 +553,13 @@ OUT_OBJS_S=$(addprefix $(OUTPUT_DIR)/,$(OBJS_S))
 
 default: firmware-EN
 
+ifeq ($(model),$(filter $(model),$(ALL_ALIENTEK_MODELS)))
+firmware-%: $(HEXFILE_DIR)/$(model)_%.hex $(HEXFILE_DIR)/$(model)_%.bin $(HEXFILE_DIR)/$(model)_%.dfu $(HEXFILE_DIR)/$(model)_%.atk
+	@true
+else
 firmware-%: $(HEXFILE_DIR)/$(model)_%.hex $(HEXFILE_DIR)/$(model)_%.bin $(HEXFILE_DIR)/$(model)_%.dfu
 	@true
+endif
 
 # Targets for binary files
 
@@ -537,6 +572,10 @@ firmware-%: $(HEXFILE_DIR)/$(model)_%.hex $(HEXFILE_DIR)/$(model)_%.bin $(HEXFIL
 
 %.dfu: %.bin Makefile
 	$(HOST_PYTHON) dfuse-pack.py -b $(DEVICE_DFU_ADDRESS)@0:$< -D $(DEVICE_DFU_VID_PID) $@
+
+ATK_DATE ?= 2000-01-01
+%.atk: %.bin Makefile
+	$(HOST_PYTHON) atk-pack.py --date $(ATK_DATE) $< $@
 
 $(HEXFILE_DIR)/$(model)_%.elf: \
 		$(OUT_OBJS_S) $(OUT_OBJS) $(OUT_OBJS_CPP)    \
