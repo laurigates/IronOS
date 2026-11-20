@@ -12,6 +12,9 @@
 #include "Font.h"
 #include "cmsis_os.h"
 #include "configuration.h"
+#ifdef COLOUR_160x40
+#include "ColourOLED.hpp"
+#else
 #include <BSP.h>
 #include <stdbool.h>
 #include <string.h>
@@ -170,4 +173,5 @@ private:
 #endif
 };
 
+#endif /* COLOUR_160x40 */
 #endif /* OLED_HPP_ */

@@ -36,6 +36,7 @@ _This firmware does **NOT** support the USB port while running for changing sett
 |      Sequre T55      | ❌  | ❌  | ✔️  |     ❌      | ❌  |    N/A    |          ✔️          |           Full OLED resolution not yet supported.            |
 |     FNIRSI HS-01     | ❌  | ❌  | ✔️  |     ❌      | ❌  |    ❌     |                      | HW missing cold-junction sensor. Not PD current limit aware. |
 |   KAIWEETS KETS02    | ❌  | ❌  | ✔️  |     ❌      | ❌  |    ❌     |                      |                Same hardware as FNIRSI HS-01.                |
+|     Alientek T90     | ❌  | ✔️  | ✔️  |     ❌      | ❌  |    ❌     |          ❌          |            Experimental support (T90B / C245).               |
 |    Miniware TS80P    | ❌  | ✔️  | ✔️  |     ❌      | ❌  |    N/A    |          ✔️          |                                                              |
 |    Miniware TS100    | ✔️  | ❌  | ❌  |     ❌      | ❌  |    ❌     |        ❌\*\*        |                                                              |
 |    Miniware TS80     | ❌  | ✔️  | ❌  |     ❌      | ❌  |    N/A    |       ❌\*\*\*       |                                                              |
@@ -89,6 +90,7 @@ The links in the table below allow to download available builds directly:
 |      Sequre S99      |                  [S99.zip](https://github.com/Ralim/IronOS/releases/download/v2.24/S99.zip)                  |                  [S99.zip](https://nightly.link/Ralim/IronOS/workflows/push/dev/S99.zip)                  |
 | Sequre Si012 Pro Max |          [Si012ProMax.zip](https://github.com/Ralim/IronOS/releases/download/v2.24/Si012ProMax.zip)          |          [Si012ProMax.zip](https://nightly.link/Ralim/IronOS/workflows/push/dev/Si012ProMax.zip)          |
 |     FNIRSI HS-01     |                 [HS01.zip](https://github.com/Ralim/IronOS/releases/download/v2.24/HS01.zip)                 |                 [HS01.zip](https://nightly.link/Ralim/IronOS/workflows/push/dev/HS01.zip)                 |
+|     Alientek T90     |                                                 Not Released                                                 |                  [T90.zip](https://nightly.link/Ralim/IronOS/workflows/push/dev/T90.zip)                  |
 
 ## Key Features
 

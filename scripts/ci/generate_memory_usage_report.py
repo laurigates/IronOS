@@ -124,6 +124,13 @@ MODEL_CONFIG: Dict[str, ModelConfig] = {
         flash_ranges=((0x00000000, 0x0002F000),),
         ram_ranges=((0x20003800, 0x20008000),),
     ),
+    # Alientek T90 (N32L403)
+    "T90": ModelConfig(
+        flash_total=76 * 1024,
+        ram_total=20 * 1024,
+        flash_ranges=((0x08000000, 0x08100000),),
+        ram_ranges=((0x20000000, 0x20005000),),
+    ),
 }
 
 SECTION_RE = re.compile(

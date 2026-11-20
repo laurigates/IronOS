@@ -28,7 +28,7 @@ void BootLogo::handleShowingLogo(const uint8_t *ptrLogoArea) {
 }
 
 void BootLogo::showOldFormat(const uint8_t *ptrLogoArea) {
-#ifdef OLED_128x32
+#if defined(OLED_128x32) || defined(COLOUR_160x40)
   // Draw in middle
   OLED::drawAreaSwapped(16, 8, 96, 16, (uint8_t *)(ptrLogoArea + 4));
 
@@ -94,7 +94,7 @@ int BootLogo::showNewFrame(const uint8_t *ptrLogoArea) {
     break;
   case 0xFF:
 // Full frame update
-#ifdef OLED_128x32
+#if defined(OLED_128x32) || defined(COLOUR_160x40)
     OLED::drawArea(16, 8, 96, 16, ptrLogoArea + 1);
 #else
     OLED::drawArea(0, 0, 96, 16, ptrLogoArea + 1);
@@ -107,7 +107,7 @@ int BootLogo::showNewFrame(const uint8_t *ptrLogoArea) {
     for (int p = 0; p < length; p++) {
       uint8_t index = ptrLogoArea[1 + (p * 2)];
       uint8_t value = ptrLogoArea[2 + (p * 2)];
-#ifdef OLED_128x32
+#if defined(OLED_128x32) || defined(COLOUR_160x40)
       OLED::drawArea(16 + (index % 96), index >= 96 ? 16 : 8, 1, 8, &value);
 #else
       OLED::drawArea(index % 96, index >= 96 ? 8 : 0, 1, 8, &value);
